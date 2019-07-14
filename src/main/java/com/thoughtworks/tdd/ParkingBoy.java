@@ -16,17 +16,20 @@ public class ParkingBoy implements Parkable{
         if(car == null){
             return null;
         }
+        if(isAllParkingLotFull(parkingLots)){
+            System.out.println("Not enough position.");
+            return null;
+        }
+        ParkingLot usedParkingLot = new ParkingLot();
         for (int i = 0; i < parkingLots.size(); i++) {
-            if(parkingLots.get(i).getCapacity() <= parkingLots.get(i).getCars().size()){
-                System.out.println("Not enough position.");
-                return null;
-            }else {
-                ParkTicket ticket = new ParkTicket();
-                parkingLots.get(i).getCars().put(ticket,car);
-                return ticket;
+            if(parkingLots.get(i).getCapacity() > parkingLots.get(i).getCars().size()){
+                usedParkingLot = parkingLots.get(i);
+                break;
             }
         }
-       return null;
+        ParkTicket ticket = new ParkTicket();
+        usedParkingLot.getCars().put(ticket,car);
+        return ticket;
     }
 
     @Override
@@ -57,5 +60,14 @@ public class ParkingBoy implements Parkable{
             }
         }
         return isTicketMapToACar;
+    }
+
+    public boolean isAllParkingLotFull(List<ParkingLot> parkingLots){
+        for (int i = 0; i < parkingLots.size(); i++) {
+            if(parkingLots.get(i).getCapacity() > parkingLots.get(i).getCars().size()){
+                return false;
+            }
+        }
+        return true;
     }
 }
