@@ -1,10 +1,12 @@
 package com.thoughtworks.tdd;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParkingBoy implements Parkable{
 
-    List<ParkingLot> parkingLots;
+    List<ParkingLot> parkingLots = new ArrayList<>();
+    public ParkingBoy(){}
 
     public ParkingBoy(List<ParkingLot> parkingLots) {
         this.parkingLots = parkingLots;

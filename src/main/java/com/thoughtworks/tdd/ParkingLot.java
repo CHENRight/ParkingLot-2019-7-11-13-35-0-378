@@ -6,13 +6,16 @@ import java.util.Map;
 public class ParkingLot {
     private final int capacity;
     private Map<ParkTicket,Car> cars = new HashMap<ParkTicket,Car>();
+    private boolean dispatchStatus;
 
     public ParkingLot() {
         this.capacity = 10;
+        this.dispatchStatus = false;
     }
 
     public ParkingLot(int capacity) {
         this.capacity = capacity;
+        this.dispatchStatus = false;
     }
 
     public ParkTicket park(Car car) {
@@ -39,5 +42,13 @@ public class ParkingLot {
 
     public Map<ParkTicket, Car> getCars() {
         return cars;
+    }
+
+    public boolean getDispatchStatus() {
+        return dispatchStatus;
+    }
+
+    public void setDispatchStatus(boolean dispatchStatus) {
+        this.dispatchStatus = dispatchStatus;
     }
 }

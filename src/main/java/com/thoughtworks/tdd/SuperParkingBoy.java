@@ -3,6 +3,7 @@ package com.thoughtworks.tdd;
 import java.util.List;
 
 public class SuperParkingBoy extends ParkingBoy {
+    public SuperParkingBoy(){}
     public SuperParkingBoy(List<ParkingLot> parkingLots) {
         super(parkingLots);
     }
