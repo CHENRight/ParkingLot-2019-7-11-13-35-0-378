@@ -31,14 +31,16 @@ public class ParkingBoy implements Parkable{
 
     @Override
     public Car fetch(ParkTicket ticket) {
-        if(!isValidTicket(parkingLots,ticket)){
-            System.out.println("Unrecognized parking ticket.");
-            return null;
-        }
         if(ticket == null){
             System.out.println("Please provide your parking ticket.");
             return null;
         }
+
+        if(!isValidTicket(parkingLots,ticket)){
+            System.out.println("Unrecognized parking ticket.");
+            return null;
+        }
+
         for (int i = 0; i < parkingLots.size(); i++) {
             if(parkingLots.get(i).getCars().containsKey(ticket)){
                 return parkingLots.get(i).getCars().remove(ticket);
