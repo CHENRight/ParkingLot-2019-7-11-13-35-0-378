@@ -70,4 +70,9 @@ public class ParkingBoy implements Parkable{
         }
         return true;
     }
+
+    public List<ParkingLot> getParkingLots() {
+        return parkingLots;
+    }
+
 }
