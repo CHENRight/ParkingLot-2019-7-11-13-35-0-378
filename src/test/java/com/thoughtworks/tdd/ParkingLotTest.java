@@ -35,4 +35,31 @@ public class ParkingLotTest {
         Assertions.assertEquals(car1,fetchCar1);
         Assertions.assertEquals(car2,fetchCar2);
     }
+
+    @Test
+    void should_return_null_when_given_a_invalid_ticket_to_fetch_car(){
+        //given
+        ParkingLot parkingLot = new ParkingLot(2);
+        Car car1 = new Car();
+        //when
+        ParkTicket ticket1 = parkingLot.park(car1);
+        ParkTicket invalidTicket = new ParkTicket();
+        Car fetchCar1 = parkingLot.fetch(invalidTicket);
+        //then
+        Assertions.assertNull(fetchCar1);
+    }
+
+    @Test
+    void should_return_null_when_use_a_ticket_fetch_twice_cars(){
+        //given
+        ParkingLot parkingLot = new ParkingLot(2);
+        Car car1 = new Car();
+        //when
+        ParkTicket ticket1 = parkingLot.park(car1);
+        Car fetchCar1 = parkingLot.fetch(ticket1);
+        Car secondFetchCar1 = parkingLot.fetch(ticket1);
+        //then
+        Assertions.assertEquals(car1,fetchCar1);
+        Assertions.assertNull(secondFetchCar1);
+    }
 }
