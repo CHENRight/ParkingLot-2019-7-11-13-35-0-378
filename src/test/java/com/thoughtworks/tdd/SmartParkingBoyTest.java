@@ -8,7 +8,7 @@ import java.util.List;
 
 public class SmartParkingBoyTest {
     @Test
-    void should_park_car_in_another_parkingLot_when_the_previous_parkinglot_is_full(){
+    void should_park_car_in_another_parkingLot_which_has_the_most_positions_when_the_first_parkinglot_is_full(){
         //given
         ParkingLot parkingLot1 = new ParkingLot(1);
         ParkingLot parkingLot2 = new ParkingLot(1);
@@ -16,13 +16,14 @@ public class SmartParkingBoyTest {
         List parkingLots = new ArrayList<ParkingLot>();
         parkingLots.add(parkingLot1);
         parkingLots.add(parkingLot2);
-        ParkingBoy parkingBoy = new ParkingBoy(parkingLots);
+        parkingLots.add(parkingLot3);
+        ParkingBoy smartParkingBoy = new SmartParkingBoy(parkingLots);
         Car car1 = new Car();
         Car car2 = new Car();
         //when
-        ParkTicket ticketNormal1 = parkingBoy.park(car1);
-        ParkTicket ticketNormal2 = parkingBoy.park(car2);
+        ParkTicket ticketNormal1 = smartParkingBoy.park(car1);
+        ParkTicket ticketNormal2 = smartParkingBoy.park(car2);
         //then
-        Assertions.assertEquals(1,parkingBoy.parkingLots.get(1).getCars().size());
+        Assertions.assertEquals(1,smartParkingBoy.parkingLots.get(2).getCars().size());
     }
 }
