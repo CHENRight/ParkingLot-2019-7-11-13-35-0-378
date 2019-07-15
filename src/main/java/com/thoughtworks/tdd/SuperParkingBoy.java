@@ -1,11 +1,13 @@
 package com.thoughtworks.tdd;
 
-import java.util.List;
+import com.thoughtworks.tdd.Exception.NotEnoughPosition;
 
-public class SuperParkingBoy extends ParkingBoy {
-    public SuperParkingBoy(){}
-    public SuperParkingBoy(List<ParkingLot> parkingLots) {
-        super(parkingLots);
+import java.util.Arrays;
+
+public class SuperParkingBoy extends Parker {
+
+    public SuperParkingBoy(ParkingLot... parkingLots) {
+        this.parkingLots.addAll(Arrays.asList(parkingLots));
     }
 
     @Override
@@ -13,23 +15,23 @@ public class SuperParkingBoy extends ParkingBoy {
         if(car == null){
             return null;
         }
-        if(isAllParkingLotFull(parkingLots)){
-            System.out.println("Not enough position.");
-            return null;
+        if(isFull()){
+            throw new NotEnoughPosition();
         }
         ParkingLot usedParkingLot = new ParkingLot();
         double max = Double.MIN_VALUE;
-        for (int i = 0; i < parkingLots.size(); i++) {
-            int availablePosition = parkingLots.get(i).getCapacity() - parkingLots.get(i).getCars().size();
-            if(availablePosition > 0){
-                if(availablePosition / (double)parkingLots.get(i).getCapacity() > max){
-                    max = parkingLots.get(i).getCars().size() / (double)parkingLots.get(i).getCapacity();
-                    usedParkingLot = parkingLots.get(i);
-                }
+        for (ParkingLot parkingLot : parkingLots) {
+            if (parkingLot.getCapacity() > parkingLot.getCars().size() && availablePositionRate(parkingLot) > max) {
+                max = parkingLot.getCars().size() / (double) parkingLot.getCapacity();
+                usedParkingLot = parkingLot;
             }
         }
         ParkTicket ticket = new ParkTicket();
         usedParkingLot.getCars().put(ticket,car);
         return ticket;
+    }
+
+    public double availablePositionRate(ParkingLot parkingLot){
+        return parkingLot.getCapacity() - parkingLot.getCars().size() / (double)parkingLot.getCapacity();
     }
 }
