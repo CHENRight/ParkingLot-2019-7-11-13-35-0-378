@@ -46,9 +46,9 @@ public class ParkingBoy implements Parkable{
             return null;
         }
 
-        for (int i = 0; i < parkingLots.size(); i++) {
-            if(parkingLots.get(i).getCars().containsKey(ticket)){
-                return parkingLots.get(i).getCars().remove(ticket);
+        for (ParkingLot parkingLot : parkingLots) {
+            if (parkingLot.getCars().containsKey(ticket)) {
+                return parkingLot.getCars().remove(ticket);
             }
         }
         return null;

@@ -18,29 +18,47 @@ public class ParkingLotManager implements Parkable {
     }
     //private List<ParkingLot> parkingLots;
 
-    public void dispatchParkingBoy(ParkingBoy parkingBoy,ParkingLot parkingLot){
+    public void dispatchParkingBoy(ParkingBoy parkingBoy,List<ParkingLot> dispatchedParkinglot){
         if(parkingBoy == null){
             System.out.println("Can not manage a empty parking boy.");
             return;
         }
         if(!parkingBoys.contains(parkingBoy)){
+            System.out.println("This manager has already managed the parking boy.");
             return;
         }
-        parkingBoy.getParkingLots().add(parkingLot);
-        parkingLot.setDispatchStatus(true);
+        //循环判断list中的parking lot是否由manager管理且未被分配，判断parking boy是否被派遣
+        for (int i = 0; i < dispatchedParkinglot.size(); i++) {
+            if(privateParkingLots.contains(dispatchedParkinglot.get(i)) && !dispatchedParkinglot.get(i).getDispatchStatus()){
+                parkingBoy.getParkingLots().add(dispatchedParkinglot.get(i));
+                dispatchedParkinglot.get(i).setDispatchStatus(true);
+                parkingBoys.remove(parkingBoy);
+            }
+        }
+    }
+
+    public void dispatchParkingBoy(ParkingBoy parkingBoy){
+        if(parkingBoy == null){
+            System.out.println("Can not manage a empty parking boy.");
+            return;
+        }
+        if(!parkingBoys.contains(parkingBoy)){
+            System.out.println("This manager has already managed the parking boy.");
+            return;
+        }
         parkingBoys.remove(parkingBoy);
     }
 
 
 
     @Override
+    //manager自己的park技能
     public ParkTicket park(Car car) {
         if(car == null){ return null; }
         if(isAllParkingLotFull(privateParkingLots)){
             System.out.println("the manager's parking lots are full.");
             return null;
         }
-
         ParkingLot usedParkingLot = new ParkingLot();
         double max = Double.MIN_VALUE;
         for (int i = 0; i < privateParkingLots.size(); i++) {
@@ -55,25 +73,16 @@ public class ParkingLotManager implements Parkable {
         return ticket;
     }
 
-    public ParkTicket park(Car car,ParkingBoy parkingBoy,ParkingLot parkingLot) {
-        if(car == null){ return null; }
-        if(!parkingBoys.contains(parkingBoy)){
-            System.out.println("This manager has already managed the parking boy.");
-        }
-        if(!privateParkingLots.contains(parkingLot)){
-            System.out.println("This manager didn't manage this parkingLot.");
-        }
-        dispatchParkingBoy(parkingBoy,parkingLot);
-        return parkingBoy.park(car);
-    }
-
+    //派遣parking boy去操作
     public ParkTicket park(Car car,ParkingBoy parkingBoy) {
         if(car == null){ return null; }
         if(!parkingBoys.contains(parkingBoy)){
             System.out.println("This manager has already managed the parking boy.");
         }
+        dispatchParkingBoy(parkingBoy);
         return parkingBoy.park(car);
     }
+
 
     @Override
     public Car fetch(ParkTicket ticket) {
@@ -116,4 +125,18 @@ public class ParkingLotManager implements Parkable {
     public void setParkingBoys(List<ParkingBoy> parkingBoys) {
         this.parkingBoys = parkingBoys;
     }
+
 }
+
+
+//    public ParkTicket park(Car car,ParkingBoy parkingBoy,ParkingLot parkingLot) {
+//        if(car == null){ return null; }
+//        if(!parkingBoys.contains(parkingBoy)){
+//            System.out.println("This manager has already managed the parking boy.");
+//        }
+//        if(!privateParkingLots.contains(parkingLot)){
+//            System.out.println("This manager didn't manage this parkingLot.");
+//        }
+//        dispatchParkingBoy(parkingBoy,parkingLot);
+//        return parkingBoy.park(car);
+//    }

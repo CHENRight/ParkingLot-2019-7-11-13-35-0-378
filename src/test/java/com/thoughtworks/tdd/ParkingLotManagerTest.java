@@ -15,15 +15,15 @@ public class ParkingLotManagerTest {
         ParkingLot parkingLot2 = new ParkingLot(1);
         ParkingLot parkingLot3 = new ParkingLot(2);
         ParkingLot parkingLot4 = new ParkingLot(2);
-        List parkingLots = new ArrayList<ParkingLot>();
+        List<ParkingLot> managerParkingLots = new ArrayList<>();
         ParkingBoy parkingBoy1 = new ParkingBoy();
         SmartParkingBoy smartParkingBoy = new SmartParkingBoy();
         SuperParkingBoy superParkingBoy = new SuperParkingBoy();
-        List parkingBoys = new ArrayList<ParkingBoy>();
-        parkingLots.add(parkingLot1);parkingLots.add(parkingLot2);parkingLots.add(parkingLot3);
+        List<ParkingBoy> parkingBoys = new ArrayList<>();
+        managerParkingLots.add(parkingLot1);managerParkingLots.add(parkingLot2);managerParkingLots.add(parkingLot3);
         parkingBoys.add(parkingBoy1);parkingBoys.add(smartParkingBoy);
 
-        ParkingLotManager manager = new ParkingLotManager(parkingBoys,parkingLots);
+        ParkingLotManager manager = new ParkingLotManager(parkingBoys,managerParkingLots);
         manager.AddParkingBoy(superParkingBoy);
         Car car1 = new Car();
         Car car2 = new Car();
@@ -31,8 +31,9 @@ public class ParkingLotManagerTest {
         Car car4 = new Car();
         //when
         ParkTicket ticketNormal1 = manager.park(car1);
-        ParkTicket ticketNormal2 = manager.park(car2,manager.getParkingBoys().get(1),parkingLot2);
-        ParkTicket ticketNull = manager.park(car3,superParkingBoy,parkingLot3);
+
+//        ParkTicket ticketNormal2 = manager.park(car2,manager.getParkingBoys().get(1),parkingLot2);
+//        ParkTicket ticketNull = manager.park(car3,superParkingBoy,parkingLot3);
         ParkTicket ticketNormal3 = manager.park(car4,manager.getParkingBoys().get(0));
         //then
         Assertions.assertNotNull(ticketNormal1);
