@@ -1,43 +1,46 @@
 package com.thoughtworks.tdd;
 
+import com.thoughtworks.tdd.Exception.ErrorTicketException;
+import com.thoughtworks.tdd.Exception.NotEnoughPosition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ParkingLotManagerTest {
 
     @Test
-    void should_park_car_in_another_parkingLot_which_has_the_most_positions_when_the_first_parkinglot_is_full(){
-        //given
-        ParkingLot parkingLot1 = new ParkingLot(1);
-        ParkingLot parkingLot2 = new ParkingLot(1);
-        ParkingLot parkingLot3 = new ParkingLot(2);
-        ParkingLot parkingLot4 = new ParkingLot(2);
-        List<ParkingLot> managerParkingLots = new ArrayList<>();
-        ParkingBoy parkingBoy1 = new ParkingBoy();
-        SmartParkingBoy smartParkingBoy = new SmartParkingBoy();
-        SuperParkingBoy superParkingBoy = new SuperParkingBoy();
-        List<ParkingBoy> parkingBoys = new ArrayList<>();
-        managerParkingLots.add(parkingLot1);managerParkingLots.add(parkingLot2);managerParkingLots.add(parkingLot3);
-        parkingBoys.add(parkingBoy1);parkingBoys.add(smartParkingBoy);
+    void should_park_car_in_parkingLot_when_given_manage_with_multiple_parkinglot_boys(){
 
-        ParkingLotManager manager = new ParkingLotManager(parkingBoys,managerParkingLots);
-        manager.AddParkingBoy(superParkingBoy);
+        Parker parkingBoy = new ParkingBoy(new ParkingLot(1));
+        Parker smartParkingBoy = new SmartParkingBoy(new ParkingLot(1));
+        Parker superParkingBoy = new SuperParkingBoy(new ParkingLot(1));
+
+        ParkingLotManager parkingLotManager = new ParkingLotManager(parkingBoy,smartParkingBoy,superParkingBoy);
+
         Car car1 = new Car();
-        Car car2 = new Car();
-        Car car3 = new Car();
-        Car car4 = new Car();
-        //when
-        ParkTicket ticketNormal1 = manager.park(car1);
+        ParkTicket ticket1 = parkingLotManager.park(car1);
+        Car fetchedCar = parkingLotManager.fetch(ticket1);
 
-//        ParkTicket ticketNormal2 = manager.park(car2,manager.getParkingBoys().get(1),parkingLot2);
-//        ParkTicket ticketNull = manager.park(car3,superParkingBoy,parkingLot3);
-        ParkTicket ticketNormal3 = manager.park(car4,manager.getParkingBoys().get(0));
-        //then
-        Assertions.assertNotNull(ticketNormal1);
+        Assertions.assertEquals(car1,fetchedCar);
 
+    }
+
+    @Test
+    void should_throw_Not_enough_position_when_given_manage_with_full_parking_lot(){
+
+        Parker parkingBoy = new ParkingBoy(new ParkingLot(1));
+        ParkingLotManager parkingLotManager = new ParkingLotManager(parkingBoy);
+        parkingLotManager.park(new Car());
+
+        Assertions.assertThrows(NotEnoughPosition.class,() -> parkingLotManager.park(new Car()));
+    }
+
+    @Test
+    void should_throw_Error_Ticket_when_manage_fetch_with_invalid_park_ticket(){
+        ParkingBoy parkingBoy = new ParkingBoy(new ParkingLot(1));
+        ParkingLotManager parkingLotManager = new ParkingLotManager(parkingBoy);
+        parkingLotManager.park(new Car());
+
+        Assertions.assertThrows(ErrorTicketException.class,() -> parkingLotManager.fetch(new ParkTicket()));
     }
 
 }
