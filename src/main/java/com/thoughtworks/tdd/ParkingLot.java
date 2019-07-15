@@ -1,5 +1,6 @@
 package com.thoughtworks.tdd;
 
+import com.thoughtworks.tdd.Exception.ErrorTicketException;
 import com.thoughtworks.tdd.Exception.NotEnoughPosition;
 
 import java.util.HashMap;
@@ -30,7 +31,10 @@ public class ParkingLot implements Parkable{
     }
 
     public Car fetch(ParkTicket ticket) {
-        return cars.remove(ticket);
+        if(contains(ticket)){
+            return cars.remove(ticket);
+        }
+        throw new ErrorTicketException();
     }
 
     @Override
@@ -41,6 +45,8 @@ public class ParkingLot implements Parkable{
     public boolean isFull(){
         return capacity <= cars.size();
     }
+
+    int countVvaidPosition() { return cars.size() - capacity; }
 
     public int getCapacity() {
         return capacity;

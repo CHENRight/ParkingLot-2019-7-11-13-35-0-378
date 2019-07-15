@@ -3,6 +3,8 @@ package com.thoughtworks.tdd;
 import com.thoughtworks.tdd.Exception.NotEnoughPosition;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class SmartParkingBoy extends Parker {
 
@@ -10,25 +12,29 @@ public class SmartParkingBoy extends Parker {
         this.parkingLots.addAll(Arrays.asList(parkingLots));
     }
 
-
     public ParkTicket park(Car car) {
-        if(car == null){ return null;}
-        if(isFull()){
+        if (car == null) {
+            return null;
+        }
+        ParkingLot moreEmptyParkingLot = null;
+        try{
+            moreEmptyParkingLot = parkingLots.stream().filter(parkingLot -> !parkingLot.isFull()).sorted((parkingLot1,parkingLot2) -> parkingLot2.countVvaidPosition() - parkingLot1.countVvaidPosition()).findFirst().get();
+        }catch (Exception e){
             throw new NotEnoughPosition();
         }
-        ParkingLot usedParkingLot = new ParkingLot();
-        int max = 1;
-        for (ParkingLot parkingLot : parkingLots) {
-            if (parkingLot.getCapacity() > parkingLot.getCars().size()) {
-                if (parkingLot.getCapacity() - parkingLot.getCars().size() > max) {
-                    max = parkingLot.getCapacity() - parkingLot.getCars().size();
-                    usedParkingLot = parkingLot;
-                }
+        return moreEmptyParkingLot.park(car);
+
+    }
+    
+
+    @Override
+    public boolean isFull(){
+        for (int i = 0; i < parkingLots.size(); i++) {
+            if(parkingLots.get(i).getCapacity() > parkingLots.get(i).getCars().size()){
+                return false;
             }
         }
-        ParkTicket ticket = new ParkTicket();
-        usedParkingLot.getCars().put(ticket,car);
-        return ticket;
+        return true;
     }
 
 }

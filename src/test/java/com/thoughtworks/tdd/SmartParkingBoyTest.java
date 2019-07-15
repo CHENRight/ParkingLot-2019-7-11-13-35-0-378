@@ -1,5 +1,7 @@
 package com.thoughtworks.tdd;
 
+import com.thoughtworks.tdd.Exception.NotEnoughPosition;
+import net.bytebuddy.build.ToStringPlugin;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -14,5 +16,12 @@ public class SmartParkingBoyTest {
         smartParkingBoy.park(new Car());
         //then
         Assertions.assertEquals(1,parkingLot3.getCars().size());
+    }
+
+    @Test
+    void should_throw_Not_enough_position_when_given_smartParkingBoy_with_full_parking_lot(){
+        Parker smartParkingBoy = new SmartParkingBoy(new ParkingLot(1));
+        smartParkingBoy.park(new Car());
+        Assertions.assertThrows(NotEnoughPosition.class,() -> smartParkingBoy.park(new Car()));
     }
 }
