@@ -1,31 +1,25 @@
 package com.thoughtworks.tdd;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.thoughtworks.tdd.Exception.NotEnoughPosition;
 
-public class ParkingBoy implements Parkable{
+import java.util.Arrays;
 
-    List<ParkingLot> parkingLots = new ArrayList<>();
-    public ParkingBoy(){}
+public class ParkingBoy extends Parker{
 
-    public ParkingBoy(List<ParkingLot> parkingLots) {
-        this.parkingLots = parkingLots;
+    public ParkingBoy(ParkingLot... parkingLots) {
+        this.parkingLots.addAll(Arrays.asList(parkingLots));
     }
-
 
     @Override
     public ParkTicket park(Car car) {
-        if(car == null){
-            return null;
-        }
-        if(isAllParkingLotFull(parkingLots)){
-            System.out.println("Not enough position.");
-            return null;
+        if(car == null){return null;}
+        if(isFull()){
+            throw new NotEnoughPosition();
         }
         ParkingLot usedParkingLot = new ParkingLot();
-        for (int i = 0; i < parkingLots.size(); i++) {
-            if(parkingLots.get(i).getCapacity() > parkingLots.get(i).getCars().size()){
-                usedParkingLot = parkingLots.get(i);
+        for (ParkingLot parkingLot : parkingLots) {
+            if (parkingLot.getCapacity() > parkingLot.getCars().size()) {
+                usedParkingLot = parkingLot;
                 break;
             }
         }
@@ -33,48 +27,4 @@ public class ParkingBoy implements Parkable{
         usedParkingLot.getCars().put(ticket,car);
         return ticket;
     }
-
-    @Override
-    public Car fetch(ParkTicket ticket) {
-        if(ticket == null){
-            System.out.println("Please provide your parking ticket.");
-            return null;
-        }
-
-        if(!isValidTicket(parkingLots,ticket)){
-            System.out.println("Unrecognized parking ticket.");
-            return null;
-        }
-
-        for (ParkingLot parkingLot : parkingLots) {
-            if (parkingLot.getCars().containsKey(ticket)) {
-                return parkingLot.getCars().remove(ticket);
-            }
-        }
-        return null;
-    }
-
-    public boolean isValidTicket(List<ParkingLot> parkingLots,ParkTicket ticket){
-        boolean isTicketMapToACar = false;
-        for (int i = 0; i < parkingLots.size(); i++) {
-            if(parkingLots.get(i).getCars().containsKey(ticket)){
-                isTicketMapToACar = true;
-            }
-        }
-        return isTicketMapToACar;
-    }
-
-    public boolean isAllParkingLotFull(List<ParkingLot> parkingLots){
-        for (int i = 0; i < parkingLots.size(); i++) {
-            if(parkingLots.get(i).getCapacity() > parkingLots.get(i).getCars().size()){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public List<ParkingLot> getParkingLots() {
-        return parkingLots;
-    }
-
 }
